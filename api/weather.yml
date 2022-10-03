@@ -1,0 +1,121 @@
+openapi: 3.0.3
+info:
+  title: Weather Forecast API
+  description: Weather Forecast
+  version: 0.0.1
+paths:
+  /v1/forecast:
+    get: 
+      description: Get weather forecast
+      responses: 
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Weather"
+        "400": 
+          description: "Bad Request"
+components:
+  schemas:
+    Weather:
+      required:
+        - latitude
+        - longitude
+        - generationtime_ms
+        - timezone
+        - timezone_abbreviation
+        - hourly_units
+        - hourly
+      properties:
+        latitude: 
+          type: number
+          example: -41.125
+          x-nullable: true
+        longitude:
+          type: number
+          example: 174.875
+          x-nullable: true  
+        generationtime_ms: 
+          type: number
+          example: 0.4000663757324219
+        utc_offset_seconds: 
+          type: number
+          example: 0
+          x-nullable: true
+        timezone:
+          type: string
+          example: GMT
+        timezone_abbreviation:
+          type: string
+          example: GMT
+        elevation:
+          type: number
+          example: 0
+        hourly_units: 
+          $ref: "#/components/schemas/Hourly_units"
+        hourly:
+          $ref: "#/components/schemas/Hourly"
+
+    Hourly_units:
+      type: object
+      description: Units of values
+      properties:
+        time:
+          type: string
+          example: iso8601
+        temperature_2m:
+          type: string
+          example: °C
+        showers:
+          type: string
+          example: mm
+        surface_pressure:
+          type: string
+          example: hPa
+        windspeed_10m:  
+          type: string
+          example: km/h
+        winddirection_10m:
+          type: string
+          example: °
+    
+    Hourly:
+      type: object
+      required:
+        - time
+        - temperature_2m
+        - showers
+      properties: 
+        time: 
+          type: array
+          items: 
+            type: string
+            example: 2022-10-02T00:00
+        temperature_2m:
+          type: array
+          items:
+            type: number
+            example: 10.8
+            x-nullable: true
+        showers:
+          type: array
+          items:
+            type: number
+            example: 0
+            x-nullable: true
+        surface_pressure:
+          type: array
+          items:
+            type: number
+            example: 1006.9
+        windspeed_10m:
+          type: array
+          items:
+            type: number
+            example: 26.1
+        winddirection_10m:
+          type: array
+          items:
+            type: number
+            example: 156
