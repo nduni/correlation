@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+
+  rabbitmq:
+    image: rabbitmq:latest
+    build: ./dockerfiles/rabbitmq/
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  weather-acceptor:
+    image: weather-acceptor
+    build:
+      context: ../../
+      dockerfile: weather/weather-acceptor/Dockerfile
+    environment:
+      DEPLOYMENT_ENV: ${DEPLOYMENT_ENV}
+    depends_on: 
+      - rabbitmq
+    restart: unless-stopped
+
+networks:
+  default:
+    name: message-network

@@ -25,7 +25,9 @@ func ProcessWeather() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(internalMessage)
+	fmt.Println(string(internalMessage))
+
+	// sending on topic
 }
 
 func GetWeather() ([]byte, error) {
