@@ -1,7 +1,7 @@
 version: '3.8'
 services:
 
-  rabbitmq:
+  corr-rabbitmq:
     image: rabbitmq:latest
     build: ./dockerfiles/rabbitmq/
     ports:
@@ -16,7 +16,18 @@ services:
     environment:
       DEPLOYMENT_ENV: ${DEPLOYMENT_ENV}
     depends_on: 
-      - rabbitmq
+      - corr-rabbitmq
+    restart: unless-stopped
+
+  weather-processor:
+    image: weather-processor
+    build:
+      context: ../../
+      dockerfile: weather/weather-processor/Dockerfile
+    environment:
+      DEPLOYMENT_ENV: ${DEPLOYMENT_ENV}
+    depends_on: 
+      - corr-rabbitmq
     restart: unless-stopped
 
 networks:

@@ -1,5 +1,5 @@
 broker_connections:
-  sending_topics:
+  receiving_topics:
     - name: weather.cmd.1
       connection_string: amqp://guest:guest@corr-rabbitmq:5672
 

@@ -1,33 +1,30 @@
 package app
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"net/http"
 	"net/url"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/nduni/correlation/common/messaging/rabbitmq"
 	mapper "github.com/nduni/correlation/weather/weather-acceptor/mappers"
 )
 
 const weather_api = "https://api.open-meteo.com/v1/forecast"
 
-func ProcessWeather() {
+func ProcessWeather(ctx context.Context) error {
 	weatherMessage, err := GetWeather()
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 	internalWeather, err := mapper.MapToInternalWeather(weatherMessage)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
-	internalMessage, err := json.Marshal(internalWeather)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(string(internalMessage))
 
-	// sending on topic
+	err = rabbitmq.SendToBroker(ctx, Senders, TOPIC_CMD_WEATHER, internalWeather)
+	return err
 }
 
 func GetWeather() ([]byte, error) {
