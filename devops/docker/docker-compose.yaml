@@ -1,6 +1,10 @@
 version: '3.8'
 services:
 
+###############################
+# DEFINITION OF INFRASTRUCTURE
+# List of exposed ports: [5672, 15672]
+###############################
   corr-rabbitmq:
     image: rabbitmq:latest
     build: ./dockerfiles/rabbitmq/
@@ -8,6 +12,11 @@ services:
       - "15672:15672"
       - "5672:5672"
 
+
+###############################
+# DEFINITION OF SERVICES
+# List of exposed ports: []
+###############################
   weather-acceptor:
     image: weather-acceptor
     build:
@@ -30,6 +39,22 @@ services:
       - corr-rabbitmq
     restart: unless-stopped
 
+###############################
+# DEFINITION OF DATABASES
+# List of exposed ports: [5434]
+###############################
+
+  weather-processor-db:
+    image: postgres:11
+    ports: 
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "weather_processor"
+      TZ: "UTC"
+    volumes:
+      - ../../weather/weather-processor/database/postgres:/docker-entrypoint-initdb.d
 networks:
   default:
     name: message-network

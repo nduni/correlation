@@ -1,2 +1,3 @@
 weather/weather-acceptor/__debug_bin
 .vscode/launch.json
+**/init_env.go

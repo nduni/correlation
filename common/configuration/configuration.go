@@ -11,6 +11,7 @@ const fileprefix = "config_"
 
 type Configuration struct {
 	BrokerConnections BrokerConnection `mapstructure:"broker_connections"`
+	Db                DB
 }
 
 type BrokerConnection struct {
@@ -21,6 +22,15 @@ type BrokerConnection struct {
 type Topic struct {
 	Name             string `mapstructure:"name"`
 	ConnectionString string `mapstructure:"connection_string"`
+}
+
+type DB struct {
+	DB_PORT     string `mapstructure:"DB_PORT"`
+	DB_HOST     string `mapstructure:"DB_HOST"`
+	DB_USER     string `mapstructure:"DB_USER"`
+	DB_PASSWORD string `mapstructure:"DB_PASSWORD"`
+	DB_NAME     string `mapstructure:"DB_NAME"`
+	DB_SSL      string `mapstructure:"DB_SSL"`
 }
 
 func ReadConfig() (Configuration, error) {
