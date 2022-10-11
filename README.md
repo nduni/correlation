@@ -1,0 +1,3 @@
+# correlation
+
+One service is to retrieve data from an external API regarding the forecast and current weather. The data is passed to the second service where it is processed and stored in the database. Another service will be an http server, from which it will be possible to receive by request, for example, the accuracy of the weather forecast. Further services will be designed to retrieve other data which will then be processed and a correlation calculated between them.
