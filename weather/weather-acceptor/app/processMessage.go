@@ -29,6 +29,7 @@ func ProcessWeather(ctx context.Context) error {
 
 func GetWeather() ([]byte, error) {
 	client := resty.New()
+	log.Info().Msgf("sending new request to %v", weather_api)
 	resp, err := client.R().
 		EnableTrace().
 		SetQueryParams(map[string]string{
@@ -46,5 +47,6 @@ func GetWeather() ([]byte, error) {
 	if statusCode := resp.StatusCode(); statusCode != http.StatusOK {
 		return resp.Body(), fmt.Errorf("response status code doesn't equal 200: %v", statusCode)
 	}
+	log.Info().Msgf("request to %v was succesful", resp.Request.URL)
 	return resp.Body(), err
 }

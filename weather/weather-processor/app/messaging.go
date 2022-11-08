@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Azure/go-amqp"
 	"github.com/nduni/correlation/common/messaging/rabbitmq"
@@ -26,7 +25,7 @@ func InitBrokerReceivers() error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("message broker receivers initialized")
+	log.Info().Msgf("message broker receivers initialized")
 	Receivers = newReceivers
 
 	return nil

@@ -12,7 +12,7 @@ services:
       - "15672:15672"
       - "5672:5672"
 
-
+  
 ###############################
 # DEFINITION OF SERVICES
 # List of exposed ports: []
@@ -23,7 +23,8 @@ services:
       context: ../../
       dockerfile: weather/weather-acceptor/Dockerfile
     environment:
-      DEPLOYMENT_ENV: ${DEPLOYMENT_ENV}
+      ENVIRONMENT: ${ENVIRONMENT}
+      LOGLEVEL: ${LOGLEVEL}
     depends_on: 
       - corr-rabbitmq
     restart: unless-stopped
@@ -34,7 +35,8 @@ services:
       context: ../../
       dockerfile: weather/weather-processor/Dockerfile
     environment:
-      DEPLOYMENT_ENV: ${DEPLOYMENT_ENV}
+      ENVIRONMENT: ${ENVIRONMENT}
+      LOGLEVEL: ${LOGLEVEL}
     depends_on: 
       - corr-rabbitmq
     restart: unless-stopped

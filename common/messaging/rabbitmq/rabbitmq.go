@@ -5,11 +5,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/Azure/go-amqp"
 	"github.com/nduni/correlation/common/configuration"
+	"github.com/nduni/correlation/common/logger"
+	"github.com/rs/zerolog"
 )
+
+var log *zerolog.Logger = logger.NewPackageLogger("rabbitmq")
 
 func StartRabbitmqSenders(config configuration.BrokerConnection) (map[string]amqp.Sender, error) {
 	senders := make(map[string]amqp.Sender, len(config.SendingTopics))
@@ -30,7 +33,7 @@ func StartRabbitmqSenders(config configuration.BrokerConnection) (map[string]amq
 			return senders, err
 		}
 		senders[brockerConfig.Name] = *sender
-		fmt.Printf("sender's connection to '%v' initialized\n", brockerConfig.Name)
+		log.Info().Msgf("sender's connection to '%v' initialized", brockerConfig.Name)
 	}
 	return senders, nil
 }
@@ -70,7 +73,7 @@ func StartRabbitmqReceivers(config configuration.BrokerConnection) (map[string]a
 			return receivers, err
 		}
 		receivers[brockerConfig.Name] = *receiver
-		fmt.Printf("receiver's connection to '%v' initialized\n", brockerConfig.Name)
+		log.Info().Msgf("receiver's connection to '%v' initialized", brockerConfig.Name)
 	}
 	return receivers, nil
 }
@@ -80,12 +83,12 @@ func ReceiveFromBroker(ctx context.Context, topic string, receiver amqp.Receiver
 		for {
 			msg, err := receiver.Receive(context.Background())
 			if err != nil {
-				log.Fatal("Reading message from AMQP:", err)
+				log.Fatal().Msgf("Reading message from AMQP:", err)
 			}
 			message := msg.GetData()
 			receiver.AcceptMessage(ctx, msg)
 
-			fmt.Printf("Message received: %s\n", message)
+			log.Info().Msgf("Message received: %s", message)
 		}
 	}()
 	return nil

@@ -1,13 +1,16 @@
 package configuration
 
 import (
-	"fmt"
 	"os"
 
+	"github.com/nduni/correlation/common/logger"
+	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 )
 
 const fileprefix = "config_"
+
+var log *zerolog.Logger = logger.NewPackageLogger("configuration")
 
 type Configuration struct {
 	BrokerConnections BrokerConnection `mapstructure:"broker_connections"`
@@ -35,7 +38,7 @@ type DB struct {
 
 func ReadConfig() (Configuration, error) {
 	var config Configuration
-	deployment_env := os.Getenv("DEPLOYMENT_ENV")
+	deployment_env := os.Getenv("ENVIRONMENT")
 	viper.SetConfigName(fileprefix + deployment_env) // name of config file (without extension)
 	viper.SetConfigType("yaml")                      // REQUIRED if the config file does not have the extension in the name
 	viper.AddConfigPath("./resources/config")
@@ -47,6 +50,6 @@ func ReadConfig() (Configuration, error) {
 	if err != nil {
 		return config, err
 	}
-	fmt.Println("Load configuration for ", deployment_env)
+	log.Info().Msgf("Load configuration for %v", deployment_env)
 	return config, nil
 }
