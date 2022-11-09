@@ -1,20 +1,20 @@
 package app
 
 import (
-	"github.com/Azure/go-amqp"
-	"github.com/nduni/correlation/common/messaging/rabbitmq"
+	"github.com/nduni/correlation/common/messaging"
 )
 
-const TOPIC_CMD_WEATHER = "weather.cmd.1"
+const TOPIC_WEATHER = "weather"
 
-var Senders map[string]amqp.Sender
+var Senders map[string]messaging.Sender
 
-func InitBrokerSenders() error {
-	newSenders, err := rabbitmq.StartRabbitmqSenders(Config.BrokerConnections)
+func InitMessageBroker() error {
+	senders, _, err := messaging.StartMessageBroker(Config.BrokerConnections)
 	if err != nil {
 		return err
 	}
-	log.Info().Msgf("message broker senders initialized")
-	Senders = newSenders
+	log.Info().Msgf("message broker initialized")
+	Senders = senders
+
 	return nil
 }

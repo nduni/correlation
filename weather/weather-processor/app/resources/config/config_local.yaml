@@ -1,5 +1,10 @@
 broker_connections:
+  message_broker_type: kafka
   receiving_topics:
-    - name: weather.cmd.1
-      connection_string: amqp://guest:guest@corr-rabbitmq:5672
-
+    rabbitmq_broker:
+      - name: weather
+        connection_string: amqp://guest:guest@corr-rabbitmq:5672
+    kafka_broker:
+      - name: weather
+        brokers: 
+        - REPLACE_WITH_WSL_IP:29092

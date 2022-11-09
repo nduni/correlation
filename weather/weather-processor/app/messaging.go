@@ -3,16 +3,15 @@ package app
 import (
 	"context"
 
-	"github.com/Azure/go-amqp"
-	"github.com/nduni/correlation/common/messaging/rabbitmq"
+	"github.com/nduni/correlation/common/messaging"
 )
 
-const TOPIC_CMD_WEATHER = "weather.cmd.1"
+const TOPIC_WEATHER = "weather"
 
-var Receivers map[string]amqp.Receiver
+var Receivers map[string]messaging.Receiver
 
 func StartSubscription() error {
-	err := InitBrokerReceivers()
+	err := InitMessageBroker()
 	if err != nil {
 		return err
 	}
@@ -20,13 +19,13 @@ func StartSubscription() error {
 	return nil
 }
 
-func InitBrokerReceivers() error {
-	newReceivers, err := rabbitmq.StartRabbitmqReceivers(Config.BrokerConnections)
+func InitMessageBroker() error {
+	_, receivers, err := messaging.StartMessageBroker(Config.BrokerConnections)
 	if err != nil {
 		return err
 	}
-	log.Info().Msgf("message broker receivers initialized")
-	Receivers = newReceivers
+	log.Info().Msgf("message broker initialized")
+	Receivers = receivers
 
 	return nil
 }
@@ -34,8 +33,8 @@ func InitBrokerReceivers() error {
 func startReceiving() {
 	for topic := range Receivers {
 		switch topic {
-		case TOPIC_CMD_WEATHER:
-			rabbitmq.ReceiveFromBroker(context.Background(), topic, Receivers[topic], ProcessWeather)
+		case TOPIC_WEATHER:
+			Receivers[topic].Receive(context.Background(), ProcessWeather)
 		}
 	}
 }

@@ -18,13 +18,19 @@ type Configuration struct {
 }
 
 type BrokerConnection struct {
-	ReceivingTopics []Topic `mapstructure:"receiving_topics"`
-	SendingTopics   []Topic `mapstructure:"sending_topics"`
+	MessageBrokerType string `mapstructure:"message_broker_type"`
+	ReceivingTopics   Broker `mapstructure:"receiving_topics"`
+	SendingTopics     Broker `mapstructure:"sending_topics"`
+}
+type Broker struct {
+	RabbitmqBroker []Topic `mapstructure:"rabbitmq_broker"`
+	KafkaBroker    []Topic `mapstructure:"kafka_broker"`
 }
 
 type Topic struct {
-	Name             string `mapstructure:"name"`
-	ConnectionString string `mapstructure:"connection_string"`
+	Name             string   `mapstructure:"name"`
+	ConnectionString string   `mapstructure:"connection_string"`
+	Brokers          []string `mapstructure:"brokers"`
 }
 
 type DB struct {

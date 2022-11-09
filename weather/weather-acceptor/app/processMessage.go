@@ -7,7 +7,7 @@ import (
 	"net/url"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/nduni/correlation/common/messaging/rabbitmq"
+	"github.com/nduni/correlation/common/messaging"
 	mapper "github.com/nduni/correlation/weather/weather-acceptor/mappers"
 )
 
@@ -23,7 +23,7 @@ func ProcessWeather(ctx context.Context) error {
 		return err
 	}
 
-	err = rabbitmq.SendToBroker(ctx, Senders, TOPIC_CMD_WEATHER, internalWeather)
+	err = messaging.SendToBroker(ctx, Senders, TOPIC_WEATHER, internalWeather)
 	return err
 }
 
