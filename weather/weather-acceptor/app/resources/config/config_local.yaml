@@ -7,4 +7,4 @@ broker_connections:
     kafka_broker:
       - name: weather
         brokers: 
-        - 172.25.252.229:29092
+        - REPLACE_WITH_WSL_IP:29092

@@ -16,6 +16,9 @@ func MapToInternalWeather(aggrWeather []byte) ([]weatherModelsInternal.WeatherIn
 		return []weatherModelsInternal.WeatherInternal{}, errors.New("empty response body")
 	}
 	weathersInternal := []weatherModelsInternal.WeatherInternal{}
+	if len(aggrWeather) == 0 {
+		return weathersInternal, errors.New("empty response body coudln't be mapped")
+	}
 	err := json.Unmarshal(aggrWeather, &weathers)
 	if err != nil {
 		return weathersInternal, err
