@@ -18,6 +18,14 @@ const (
 
 var log *zerolog.Logger = logger.NewPackageLogger("rabbitmq")
 
+type Sender interface {
+	Send(ctx context.Context, msg []byte) error
+}
+
+type Receiver interface {
+	Receive(ctx context.Context, functionToCall func(context.Context, []byte) error) error
+}
+
 func StartMessageBroker(config configuration.BrokerConnection) (map[string]Sender, map[string]Receiver, error) {
 	switch config.MessageBrokerType {
 	case KAFKA_BROKER:
@@ -27,14 +35,6 @@ func StartMessageBroker(config configuration.BrokerConnection) (map[string]Sende
 	default:
 		return nil, nil, errors.New("no message broker types in config")
 	}
-}
-
-type Sender interface {
-	Send(ctx context.Context, msg []byte) error
-}
-
-type Receiver interface {
-	Receive(ctx context.Context, functionToCall func(context.Context, []byte) error) error
 }
 
 func startMessenger(config configuration.BrokerConnection, connectionCreator func(connection configuration.BrokerConnection) (map[string]Sender, map[string]Receiver, error)) (map[string]Sender, map[string]Receiver, error) {
