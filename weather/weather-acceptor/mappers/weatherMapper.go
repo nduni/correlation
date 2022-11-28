@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/nduni/correlation/common/utils"
 	weatherModels "github.com/nduni/correlation/weather/weather-acceptor/models/weather"
@@ -10,6 +11,10 @@ import (
 
 func MapToInternalWeather(aggrWeather []byte) ([]weatherModelsInternal.WeatherInternal, error) {
 	var weathers weatherModels.Weather
+
+	if len(aggrWeather) == 0 {
+		return []weatherModelsInternal.WeatherInternal{}, errors.New("empty response body")
+	}
 	weathersInternal := []weatherModelsInternal.WeatherInternal{}
 	err := json.Unmarshal(aggrWeather, &weathers)
 	if err != nil {

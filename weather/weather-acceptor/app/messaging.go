@@ -6,7 +6,10 @@ import (
 
 const TOPIC_WEATHER = "weather"
 
-var Senders map[string]messaging.Sender
+var (
+	Senders    map[string]messaging.Sender
+	HTTPClient messaging.HTTPRequester
+)
 
 func InitMessageBroker() error {
 	senders, _, err := messaging.StartMessageBroker(Config.BrokerConnections)
@@ -17,4 +20,8 @@ func InitMessageBroker() error {
 	Senders = senders
 
 	return nil
+}
+
+func InitHTTPClients() {
+	HTTPClient = &messaging.RestyClient{Url: weather_api}
 }

@@ -21,6 +21,7 @@ func main() {
 	if err != nil {
 		log.Panic().Msg(err.Error())
 	}
+	app.InitHTTPClients()
 	runCronJobs()
 
 	select {}
